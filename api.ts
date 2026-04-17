@@ -18,29 +18,27 @@ app.use(cors({
 app.post('/api/send-message', async (req, res) => {
     const { whatsappLid, message } = req.body;
 
-    try {
-        if (!whatsappLid || !message) {
-            return res.status(400).json({ error: 'Faltan datos' });
-        }
-
-        // 1. Esperamos un poco para no saturar el socket
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // 2. Intentamos enviar
-        console.log(`📤 Intentando enviar a ${whatsappLid}...`);
-        await enviarMensajeWhatsapp(whatsappLid, message);
-        
-        res.status(200).json({ success: true });
-    } catch (error: any) {
-        console.error('❌ Error enviando mensaje:', error.message);
-        
-        // Si el error es de conexión cerrada, avisamos a Next.js con un 503 (Servicio no disponible)
-        if (error.message.includes('Closed')) {
-            return res.status(503).json({ error: 'WhatsApp se desconectó, reintentando...' });
-        }
-        
-        res.status(500).json({ error: error.message });
+    if (!whatsappLid || !message) {
+        return res.status(400).json({ error: 'Faltan datos' });
     }
+
+    // 1. Respondemos a Vercel/Postman AL INSTANTE
+    res.status(200).json({ 
+        success: true, 
+        status: 'procesando',
+        note: 'Orden recibida, enviando a WhatsApp en segundo plano' 
+    });
+
+    // 2. Ejecutamos el envío sin hacer esperar a nadie
+    setTimeout(async () => {
+        try {
+            console.log(`📤 Enviando a ${whatsappLid}...`);
+            await enviarMensajeWhatsapp(whatsappLid, message);
+            console.log(`✅ ¡Mensaje entregado a ${whatsappLid}!`);
+        } catch (error: any) {
+            console.error('❌ Error interno en Baileys:', error.message);
+        }
+    }, 1500); 
 });
 
 // Arrancamos el servidor y, acto seguido, conectamos WhatsApp
