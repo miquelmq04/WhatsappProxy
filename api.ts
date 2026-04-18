@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { connectToWhatsApp, enviarMensajeWhatsapp } from './server'; // Ajusta la ruta a tu archivo
+import { startupCrons } from './crons';
 
 const app = express();
 app.use(express.json());
@@ -51,10 +52,10 @@ app.post('/api/send-message', async (req, res) => {
 
 // Arrancamos el servidor y, acto seguido, conectamos WhatsApp
 const PORT = process.env.PORT || 3001;
-const HOST = process.env.HOST || 'localhost';
 app.listen(PORT, async () => {
-    console.log(`🚀 API Express escuchando en http://${HOST}:${PORT}`);
+    console.log(`🚀 API Express escuchando en ${PORT}`);
     
     // Encendemos el motor de Baileys
     await connectToWhatsApp();
+    startupCrons();
 });

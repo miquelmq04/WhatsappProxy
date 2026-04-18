@@ -4,10 +4,10 @@
     "description": "WhatsApp Proxy API con Baileys",
     "main": "api.ts",
     "type": "module",
-	"scripts": {
-		"start": "npx tsx api.ts", 
-		"dev": "npx tsx watch api.ts"
-	},
+    "scripts": {
+        "start": "npx tsx api.ts",
+        "dev": "npx tsx watch api.ts"
+    },
     "dependencies": {
         "@hapi/boom": "^10.0.1",
         "@whiskeysockets/baileys": "^7.0.0-rc.9",
@@ -15,15 +15,17 @@
         "cors": "^2.8.6",
         "dotenv": "^16.6.1",
         "express": "^5.2.1",
+        "node-cron": "^4.2.1",
         "pino": "^10.3.1",
         "qrcode-terminal": "^0.12.0",
         "tsx": "^4.21.0"
     },
     "devDependencies": {
         "@types/cors": "^2.8.19",
-        "@types/express": "^5.0.6"
+        "@types/express": "^5.0.6",
+        "@types/node-cron": "^3.0.11"
     },
-	"engines": {
-		"node": ">=20.0.0"
-	}
+    "engines": {
+        "node": ">=20.0.0"
+    }
 }
