@@ -16,6 +16,14 @@ app.use(cors({
 
 // En tu archivo de la API (api.ts)
 app.post('/api/send-message', async (req, res) => {
+    // Verificar token de autenticación
+    const authHeader = req.headers.authorization;
+    const expectedSecret = process.env.WHATSAPP_SECRET;
+
+    if (authHeader !== `Bearer ${expectedSecret}`) {
+        return res.status(401).json({ error: 'Not authorized' });
+    }
+
     const { whatsappLid, message } = req.body;
 
     if (!whatsappLid || !message) {
